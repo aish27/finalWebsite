@@ -312,6 +312,10 @@
 
 	//print "<p id=main>$relatedSql</p>";
 	$similarResults = mysqli_query($conn, "SELECT * FROM education WHERE " . $relatedSql);
+  //If we get no similar results, select from the entire database.
+  if (mysqli_num_rows($similarResults) == 0) {
+    $similarResults = mysqli_query($conn, "SELECT * FROM education");
+  }
 	output($result);
 	 print "</div>
 		</div>
