@@ -312,10 +312,12 @@
 
 	//print "<p id=main>$relatedSql</p>";
 	$similarResults = mysqli_query($conn, "SELECT * FROM education WHERE " . $relatedSql);
-  //If we get no similar results, select from the entire database.
-  if (mysqli_num_rows($similarResults) == 0) {
-    $similarResults = mysqli_query($conn, "SELECT * FROM education");
+  //If we get no or too few similar results, select from the entire database.
+  $numSimilarResults;
+  if (!$similarResults) {
+    $similarResults = mysqli_query($conn, "SELECT * FROM education"); //No results? Grab everything.
   }
+  $numSimilarResults = mysqli_num_rows($similarResults);
 	output($result);
 	 print "</div>
 		</div>
@@ -326,7 +328,13 @@
 			</div>
 		</div>
 		<div class=row>";
-	outputSimilarResults($similarResults);
+  if ($numSimilarResults < 10) { //If we had less than 10...
+  	outputSimilarResults($similarResults, $numSimilarResults); //Output the relevant results first...
+    $similarResults = mysqli_query($conn, "SELECT * FROM education"); //...grab everything and...
+    outputSimilarResults($similarResults, 10 - $numSimilarResults); //...fill in the remaining we need.
+  } else {
+    outputSimilarResults($similarResults, 10); //We have plenty of results, print 10 of them.
+  }
 		print "
 		</div>
 		</div>";

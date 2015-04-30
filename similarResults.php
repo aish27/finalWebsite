@@ -20,7 +20,7 @@ function fisherYates(&$array)
     }
 }
 
-function outputSimilarResults($result)
+function outputSimilarResults($result, $numResults)
 {
 
   if ($result)
@@ -43,7 +43,7 @@ function outputSimilarResults($result)
     }
     mysqli_free_result($result);
     fisherYates($generatedHTML);
-    for ($i = 0; $i < 10; $i++) { //Display only 10, at random.
+    for ($i = 0; $i < $numResults; $i++) { //Display only 10, at random.
       print $generatedHTML[$i];
     }
   }
